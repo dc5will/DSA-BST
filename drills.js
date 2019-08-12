@@ -148,3 +148,16 @@ class BinarySearchTree {
         return this.left._findMin();
     }
 }
+
+// Create a BST and insert 3,1,4,6,9,2,5,7
+
+let newBST = new BinarySearchTree();
+newBST.insert(3)
+newBST.insert(1)
+newBST.insert(4)
+newBST.insert(6)
+newBST.insert(9)
+newBST.insert(2)
+newBST.insert(5)
+newBST.insert(7)
+console.log(newBST);
