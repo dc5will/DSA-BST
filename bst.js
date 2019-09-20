@@ -259,3 +259,17 @@ function third_largest(tree) {
   nth_largest(tree, state);
   return state.result;
 }
+
+
+// Balanced BST
+function balanced(bst) {
+  let leftHeight = heightOfBST(bst.left);
+  let rightHeight = heightOfBST(bst.right);
+
+  if(Math.abs(rightHeight - leftHeight) <= 1) {
+    return true;
+  }
+  else if (Math.abs(rightHeight - leftHeight) > 1) {
+    return false;
+  }
+}
