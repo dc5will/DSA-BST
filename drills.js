@@ -7,7 +7,6 @@
 - BST support 3 fundamental operations: insert, remove, and find
 */
 
-
 // Create a BST class
 class BinarySearchTree {
     constructor(key = null, value = null, parent = null) {
