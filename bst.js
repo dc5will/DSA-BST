@@ -211,3 +211,51 @@ function isBst(bst) {
     return true;
   }
 }
+
+// 3rd largest node
+
+function treeValues(bst) {
+  // do we have to sort the keys in order and subtract length by 3?
+  // helper function with a generic amt that could be given
+  let resultsString = '';
+  if(!bst) {
+    return '';
+  } else {
+    resultsString += `${bst.value}_` + treeValues(bst.left) + treeValues(bst.right);
+  }
+  return resultsString;
+}
+
+// alternative third largest
+function thirdLargest(str) {
+  let results = [];
+  let arr = str.split('_');
+  for (let i = 0; i < arr.length-1; i++) {
+    results.push(arr[i]);
+  }
+  return results.sort()[results.length-3];
+}
+
+// Write an algorithm to find the third largest value in a binary search tree
+function nth_largest(tree, state) { 
+  //Finding the largest node means traversing the right first.
+  if (tree.right) {
+    nth_largest(tree.right, state);
+    if (state.result) return;
+  }
+  if (!--state.n) { 
+    //Found it.
+    state.result = tree.key; 
+    return;
+  }
+  if (tree.left) nth_largest(tree.left, state);
+}
+
+function third_largest(tree) {
+  //Special case: empty tree.
+  if (tree.key == null) 
+    return null;
+  let state = {n: 3, result: null};
+  nth_largest(tree, state);
+  return state.result;
+}
