@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 class BinarySearchTree {
   constructor(key = null, value = null, parent = null) {
@@ -16,65 +16,60 @@ class BinarySearchTree {
     if (this.key === null) {
       this.key = key;
       this.value = value;
-    }
-    /* If the tree already exists, then start at the root, 
+    } else if (key < this.key) {
+      /* If the tree already exists, then start at the root, 
        and compare it to the key you want to insert.
        If the new key is less than the node's key 
        then the new node needs to live in the left-hand branch */
-    else if (key < this.key) {
       /* If the existing node does not have a left child, 
            meaning that if the `left` pointer is empty, 
            then we can just instantiate and insert the new node 
            as the left child of that node, passing `this` as the parent */
       if (this.left === null) {
         this.left = new BinarySearchTree(key, value, this);
-      }
-      /* If the node has an existing left child, 
+      } else {
+        /* If the node has an existing left child, 
            then we recursively call the `insert` method 
            so the node is added further down the tree */
-      else {
         //key > this.key
         this.left.insert(key, value);
       }
     }
-    // Similarly, if the new key is greater than the node's key 
-    //  then you do the same thing, but on the right-hand side 
+    // Similarly, if the new key is greater than the node's key
+    //  then you do the same thing, but on the right-hand side
     else {
       if (this.right === null) {
         this.right = new BinarySearchTree(key, value, this);
-      }
-      else {
+      } else {
         this.right.insert(key, value);
       }
     }
   }
   find(key) {
     //BigO notation: Best: O(1) root key === key Average: O(log(n)) don't have to search
-    //all the data Worst: O(n), very unbalanced tree 
+    //all the data Worst: O(n), very unbalanced tree
     //check if this.key === key
     // If the item is found at the root then return that value
     if (this.key === key) {
       return this.value;
-    }
-    /* If the item you are looking for is less than the root 
+    } else if (key < this.key && this.left) {
+      /* If the item you are looking for is less than the root 
        then follow the left child.
        If there is an existing left child, 
        then recursively check its left and/or right child
        until you find the item */
-    else if (key < this.key && this.left) {
       return this.left.find(key);
-    }
-    /* If the item you are looking for is greater than the root 
+    } else if (key > this.key && this.right) {
+      /* If the item you are looking for is greater than the root 
        then follow the right child.
        If there is an existing right child, 
        then recursively check its left and/or right child
        until you find the item */
-    else if (key > this.key && this.right) {
       return this.right.find(key);
     }
     // You have searched the tree and the item is not in the tree
     else {
-      throw new Error('Key Error');
+      throw new Error("Key Error");
     }
   }
   remove(key) {
@@ -87,55 +82,46 @@ class BinarySearchTree {
         this.key = successor.key;
         this.value = successor.value;
         successor.remove(successor.key);
-      }
-      /* If the node only has a left child, 
+      } else if (this.left) {
+        /* If the node only has a left child, 
            then you replace the node with its left child */
-      else if (this.left) {
         this._replaceWith(this.left);
-      }
-      /* And similarly if the node only has a right child 
+      } else if (this.right) {
+        /* And similarly if the node only has a right child 
            then you replace it with its right child */
-      else if (this.right) {
         this._replaceWith(this.right);
-      }
-      /* If the node has no children then
+      } else {
+        /* If the node has no children then
            simply remove it and any references to it 
            by calling "this._replaceWith(null)" */
-      else {
         this._replaceWith(null);
       }
-    }
-    else if (key < this.key && this.left) {
+    } else if (key < this.key && this.left) {
       this.left.remove(key);
-    }
-    else if (key > this.key && this.right) {
+    } else if (key > this.key && this.right) {
       this.right.remove(key);
-    }
-    else {
-      throw new Error('Key Error');
+    } else {
+      throw new Error("Key Error");
     }
   }
   _replaceWith(node) {
     if (this.parent) {
       if (this === this.parent.left) {
         this.parent.left = node;
-      }
-      else if (this === this.parent.right) {
+      } else if (this === this.parent.right) {
         this.parent.right = node;
       }
 
       if (node) {
         node.parent = this.parent;
       }
-    }
-    else {
+    } else {
       if (node) {
         this.key = node.key;
         this.value = node.value;
         this.left = node.left;
         this.right = node.right;
-      }
-      else {
+      } else {
         this.key = null;
         this.value = null;
         this.left = null;
@@ -154,23 +140,22 @@ class BinarySearchTree {
 
 // What does this program do?
 function tree(t) {
-  if(!t) {
+  if (!t) {
     return 0;
   }
   return tree(t.left) + t.value + tree(t.right);
 }
 // ANS: Adds up all of the node values of a given tree recursively
 
-
 // Height of a BST
+// Run time: O(n), because it is iterating through all nodes to find the height
 function heightOfBST(bst) {
-  let leftHeight = 0; 
+  let leftHeight = 0;
   let rightHeight = 0;
-  if(!bst) {
+  if (!bst) {
     return 0;
-  }
-  else { 
-    leftHeight = heightOfBST(bst.left); 
+  } else {
+    leftHeight = heightOfBST(bst.left);
     rightHeight = heightOfBST(bst.right);
     if (leftHeight > rightHeight) {
       return leftHeight + 1;
@@ -178,6 +163,24 @@ function heightOfBST(bst) {
       return rightHeight + 1;
     }
   }
+}
+
+// REVIEW: Alternative solutions
+function bst_height1(tree) {
+  return (
+    Math.max(
+      tree.left && bst_height1(tree.left),
+      tree.right && bst_height1(tree.right)
+    ) + 1
+  );
+}
+
+function bst_height2(tree) {
+  if (tree.left && tree.right)
+    return Math.max(bst_height2(tree.left), bst_height2(tree.right)) + 1;
+  if (tree.left) return bst_height2(tree.left) + 1;
+  if (tree.right) return bst_height2(tree.right) + 1;
+  return 1;
 }
 
 // Is it a BST?
@@ -212,16 +215,25 @@ function isBst(bst) {
   }
 }
 
-// 3rd largest node
+// REVIEW: Alternative solution
+function is_bst(tree, minimum, maximum) {
+  if (minimum !== undefined && tree.key < minimum) return false;
+  if (maximum !== undefined && tree.key > maximum) return false;
+  if (tree.left && !is_bst(tree.left, minimum, tree.key)) return false;
+  if (tree.right && !is_bst(tree.right, tree.key, maximum)) return false;
+  return true;
+}
 
+// 3rd largest node
 function treeValues(bst) {
   // do we have to sort the keys in order and subtract length by 3?
   // helper function with a generic amt that could be given
-  let resultsString = '';
-  if(!bst) {
-    return '';
+  let resultsString = "";
+  if (!bst) {
+    return "";
   } else {
-    resultsString += `${bst.value}_` + treeValues(bst.left) + treeValues(bst.right);
+    resultsString +=
+      `${bst.value}_` + treeValues(bst.left) + treeValues(bst.right);
   }
   return resultsString;
 }
@@ -229,23 +241,24 @@ function treeValues(bst) {
 // alternative third largest
 function thirdLargest(str) {
   let results = [];
-  let arr = str.split('_');
-  for (let i = 0; i < arr.length-1; i++) {
+  let arr = str.split("_");
+  for (let i = 0; i < arr.length - 1; i++) {
     results.push(arr[i]);
   }
-  return results.sort()[results.length-3];
+  return results.sort()[results.length - 3];
 }
 
+// REVIEW: Alternative Solution
 // Write an algorithm to find the third largest value in a binary search tree
-function nth_largest(tree, state) { 
+function nth_largest(tree, state) {
   //Finding the largest node means traversing the right first.
   if (tree.right) {
     nth_largest(tree.right, state);
     if (state.result) return;
   }
-  if (!--state.n) { 
+  if (!--state.n) {
     //Found it.
-    state.result = tree.key; 
+    state.result = tree.key;
     return;
   }
   if (tree.left) nth_largest(tree.left, state);
@@ -253,33 +266,43 @@ function nth_largest(tree, state) {
 
 function third_largest(tree) {
   //Special case: empty tree.
-  if (tree.key == null) 
-    return null;
-  let state = {n: 3, result: null};
+  if (tree.key == null) return null;
+  let state = { n: 3, result: null };
   nth_largest(tree, state);
   return state.result;
 }
-
 
 // Balanced BST
 function balanced(bst) {
   let leftHeight = heightOfBST(bst.left);
   let rightHeight = heightOfBST(bst.right);
 
-  if(Math.abs(rightHeight - leftHeight) <= 1) {
+  if (Math.abs(rightHeight - leftHeight) <= 1) {
     return true;
-  }
-  else if (Math.abs(rightHeight - leftHeight) > 1) {
+  } else if (Math.abs(rightHeight - leftHeight) > 1) {
     return false;
   }
 }
 
-// Are they the same BSTs?
+// REVIEW: Alt solution
+//Implement a function to check if a tree is balanced (i.e. a tree where no two leaves differ
+//in distance from the root by more than one).
+function isBalanced(tree) {
+  if (!tree.left) {
+    return !(tree.right && (tree.right.left || tree.right.right));
+  }
+  if (!tree.right) {
+    return !(tree.left && (tree.left.left || tree.left.right));
+  }
+  return isBalanced(tree.left) && isBalanced(tree.right);
+}
 
+/* Are they the same BSTs?
 // Rules: Don't construct the BST
 // arr1: [3, 5, 4, 6, 1, 0, 2]
 // arr2: [3, 1, 5, 2, 4, 6, 0]
-// expected output: true
+ expected output: true
+*/
 
 let arr1 = [3, 5, 4, 6, 1, 0, 2];
 let arr2 = [3, 1, 5, 2, 4, 6, 0];
@@ -322,14 +345,14 @@ function sameBSTs(arr1, arr2) {
 
 function main() {
   const BST = new BinarySearchTree();
-  BST.insert(3,3);
-  BST.insert(1,1);
-  BST.insert(4,4);
-  BST.insert(6,6);
-  BST.insert(9,9);
-  BST.insert(2,2);
-  BST.insert(5,5);
-  BST.insert(7,7);
+  BST.insert(3, 3);
+  BST.insert(1, 1);
+  BST.insert(4, 4);
+  BST.insert(6, 6);
+  BST.insert(9, 9);
+  BST.insert(2, 2);
+  BST.insert(5, 5);
+  BST.insert(7, 7);
   // console.log(BST);
   // console.log(tree(BST));
   // console.log(heightOfBST(BST));
@@ -338,7 +361,10 @@ function main() {
   // console.log(treeValues(BST));
   // console.log(thirdLargest(treeValues(BST)));
   // console.log(balanced(BST));
-  console.log(sameBSTs([3, 5, 4, 6, 1, 0, 2],[3, 1, 5, 2, 4, 6, 0]));
+  let Min = Number.MIN_VALUE;
+  let Max = Number.MAX_VALUE;
+  console.log(is_bst(tree, Min, Max));
+  console.log(sameBSTs([3, 5, 4, 6, 1, 0, 2], [3, 1, 5, 2, 4, 6, 0]));
 }
 
 main();
