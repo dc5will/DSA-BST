@@ -319,3 +319,26 @@ function sameBSTs(arr1, arr2) {
   }
   return sameBSTs(leftArray1, leftArray2) && sameBSTs(rightArray1, rightArray2);
 }
+
+function main() {
+  const BST = new BinarySearchTree();
+  BST.insert(3,3);
+  BST.insert(1,1);
+  BST.insert(4,4);
+  BST.insert(6,6);
+  BST.insert(9,9);
+  BST.insert(2,2);
+  BST.insert(5,5);
+  BST.insert(7,7);
+  // console.log(BST);
+  // console.log(tree(BST));
+  // console.log(heightOfBST(BST));
+  // console.log(isBst(BST));
+  // console.log(isBst(''));
+  // console.log(treeValues(BST));
+  // console.log(thirdLargest(treeValues(BST)));
+  // console.log(balanced(BST));
+  console.log(sameBSTs([3, 5, 4, 6, 1, 0, 2],[3, 1, 5, 2, 4, 6, 0]));
+}
+
+main();
