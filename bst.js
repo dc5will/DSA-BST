@@ -273,3 +273,49 @@ function balanced(bst) {
     return false;
   }
 }
+
+// Are they the same BSTs?
+
+// Rules: Don't construct the BST
+// arr1: [3, 5, 4, 6, 1, 0, 2]
+// arr2: [3, 1, 5, 2, 4, 6, 0]
+// expected output: true
+
+let arr1 = [3, 5, 4, 6, 1, 0, 2];
+let arr2 = [3, 1, 5, 2, 4, 6, 0];
+
+function sameBSTs(arr1, arr2) {
+  // works better with arrLength, index1, index2 as extra params
+  // index1 === arrLength
+  // base case
+  if (arr1[0] !== arr2[0]) {
+    return false;
+  }
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+  if (arr1.length === 1 && arr2.length === 1) {
+    return true;
+  }
+  let root = arr1[0];
+  // make sure both BSTs are the same height
+  // if a child is < root then apply recursive fn on left child for node comparison
+  // if a child is > root then apply recursive fn on right child for node comparison
+  let leftArray1 = [];
+  let rightArray1 = [];
+  let leftArray2 = [];
+  let rightArray2 = [];
+  for (let i = 1; i < arr1.length; i++) {
+    if (arr1[i] < root) {
+      leftArray1.push(arr1[i]);
+    } else if (arr1[i] > root) {
+      rightArray1.push(arr1[i]);
+    }
+    if (arr2[i] < root) {
+      leftArray2.push(arr2[i]);
+    } else if (arr2[i] > root) {
+      rightArray2.push(arr2[i]);
+    }
+  }
+  return sameBSTs(leftArray1, leftArray2) && sameBSTs(rightArray1, rightArray2);
+}
